@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = World.class, remap = false)
-public class Mixin_World {
+public class WorldMixin {
     @Inject(
             method = "wakeUpAllPlayers",
             at = @At("RETURN")
