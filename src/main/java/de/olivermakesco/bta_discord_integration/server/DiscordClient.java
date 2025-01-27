@@ -39,7 +39,7 @@ public class DiscordClient {
 
             return true;
         } catch (Throwable t) {
-            de.olivermakesco.bta_discord_integration.BTADiscordIntegrationMod.LOGGER.debug("Unable to start discord bot.", t);
+            de.olivermakesco.bta_discord_integration.BTADiscordIntegrationMod.LOGGER.error("Unable to start discord bot.", t);
             return false;
         }
     }

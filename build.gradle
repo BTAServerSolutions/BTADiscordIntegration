@@ -1,5 +1,6 @@
 plugins {
 	id 'fabric-loom' version '1.7.bta'
+	id 'com.gradleup.shadow' version '8.3.5'
 	id 'java'
 }
 
@@ -96,9 +97,7 @@ dependencies {
 
 	implementation "com.github.electronstudio:sdl2gdx:1.0.3"
 	//includeInJar "com.github.electronstudio:sdl2gdx:1.0.3"
-	implementation "net.dv8tion:JDA:5.0.0-beta.13"
 	//includeInJar "net.dv8tion:JDA:5.0.0-beta.13"
-	implementation "club.minnced:discord-webhooks:0.8.4"
 /*	includeInJar "club.minnced:discord-webhooks:0.8.4"
 	includeInJar "com.google.code.gson:gson:2.8.9"*/
 
@@ -112,7 +111,8 @@ dependencies {
 	implementation("org.apache.logging.log4j:log4j-api:${log4jVersion}")
 	implementation("org.apache.logging.log4j:log4j-1.2-api:${log4jVersion}")
 
-	include(implementation("org.apache.commons:commons-lang3:3.12.0"))
+	implementation shadow("net.dv8tion:JDA:5.2.2")
+	implementation shadow("club.minnced:discord-webhooks:0.8.4")
 
 	modImplementation("com.github.zarzelcow:legacy-lwjgl3:1.0.4")
 	implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
@@ -145,6 +145,26 @@ jar {
 	from("LICENSE") {
 		rename { "${it}_${archivesBaseName}" }
 	}
+}
+
+remapJar {
+	dependsOn(shadowJar)
+	mustRunAfter(shadowJar)
+	inputFile = file(shadowJar.archivePath)
+}
+
+shadowJar {
+    configurations = [project.configurations.shadow]
+    exclude("META-INF")
+    //taken from https://github.com/discord-jda/JDA/blob/master/build.gradle.kts
+    exclude("natives/**")
+    exclude("com/sun/jna/**")
+    exclude("com/google/crypto/tink/**")
+    exclude("com/google/gson/**")
+    exclude("com/google/protobuf/**")
+    exclude("google/protobuf/**")
+    exclude("club/minnced/opus/util/*")
+    exclude("tomp2p/opuswrapper/*")
 }
 
 configurations.configureEach {
